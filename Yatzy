@@ -57,7 +57,7 @@ public class Yatzy {
 	 */
 	public void throwDice(boolean[] holds) {
 		for(int i =0; i < values.length; i++) {
-			if(holds[i] == false) {
+			if(!holds[i]) {
 				values[i] = random.nextInt(6) +1;
 			} 
 		}
@@ -126,7 +126,7 @@ public class Yatzy {
 		int sum = 0;
 		
 		while(!pairFound && i > 0) {
-			if(eyeCount[i] == 2) {
+			if(eyeCount[i] >= 2) {
 				sum = i * 2;
 				pairFound = true;
 				
@@ -216,13 +216,27 @@ public class Yatzy {
 	 * face value and 2 dice a different face value.
 	 */
 	public int fullHousePoints() {
+		int[] eyeCount = calcCounts();
+		boolean twoOfKind = false;
+		boolean threeOfKind = false;
 		int sum = 0;
 		
-		if(onePairPoints() > 0 && threeSamePoints() > 0) {
-			sum = onePairPoints() + threeSamePoints();
-		}
 		
-		return sum;
+		for(int i = 0; i < eyeCount.length; i++ ) {
+			if(eyeCount[i] == 2) {
+				twoOfKind = true;
+				sum += i*2;
+			} if(eyeCount[i] == 3) {
+				threeOfKind = true;
+				sum += i*3;
+			}
+			
+		}
+		if(twoOfKind && threeOfKind) {
+			return sum;
+		} else {
+			return 0;
+		}
 		
 	}
 
