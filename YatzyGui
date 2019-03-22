@@ -1,0 +1,410 @@
+package gui;
+
+import javafx.application.Application;
+import javafx.event.Event;
+import javafx.event.EventTarget;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
+import model.Yatzy;
+
+public class MainApp extends Application {
+	public static void main(String[] args) {
+		Application.launch(args);
+	}
+
+	@Override
+	public void start(Stage stage) {
+		stage.setTitle("Yatzy");
+		GridPane pane = new GridPane();
+		this.initContent(pane);
+
+		Scene scene = new Scene(pane);
+		stage.setScene(scene);
+		stage.setResizable(true);
+		stage.show();
+	}
+
+	// -------------------------------------------------------------------------
+
+	// Shows the face values of the 5 dice.
+	private TextField name1;
+	private TextField name2;
+	private TextField name3;
+	private TextField name4;
+	private TextField name5;
+	
+	private Label lblRolls;
+	private TextField[] rolls = new TextField[5];
+	
+	// Shows the hold status of the 5 dice.
+	private CheckBox[] chbHolds;
+	// Shows the results previously selected .
+	// For free results (results not set yet), the results
+	// corresponding to the actual face values of the 5 dice are shown.
+	
+	private TextField[] txfResults = new TextField[15];
+	
+	private TextField result1;
+	private TextField result2;
+	private TextField result3;
+	private TextField result4;
+	private TextField result5;
+	private TextField result6;
+	private TextField result7;
+	private TextField result8;
+	private TextField result9;
+	private TextField result10;
+	private TextField result11;
+	private TextField result12;
+	private TextField result13;
+	private TextField result14;
+	private TextField result15;
+	
+	private TextField sum1;
+	private TextField sum2;
+	private TextField total1;
+	private TextField total2;
+	
+	private CheckBox hold1;
+	private CheckBox hold2;
+	private CheckBox hold3;
+	private CheckBox hold4;
+	private CheckBox hold5;
+	
+	// Shows points in sums, bonus and total.
+	private TextField txfSumSame, txfBonus, txfSumOther, txfTotal;
+	// Shows the number of times the dice has been rolled.
+	private Label lblRolled;
+
+	private Button btnRoll;
+
+	private void initContent(GridPane pane) {
+		pane.setGridLinesVisible(true);
+		pane.setPadding(new Insets(10));
+		pane.setHgap(10);
+		pane.setVgap(10);
+		
+		
+		
+
+		// ---------------------------------------------------------------------
+
+		GridPane dicePane = new GridPane();
+		pane.add(dicePane, 0, 0);
+		
+		
+		dicePane.setGridLinesVisible(false);
+		dicePane.setPadding(new Insets(10));
+		dicePane.setHgap(10);
+		dicePane.setVgap(10);
+		dicePane.setStyle("-fx-border-color: black");
+
+		// initialize txfValues, chbHolds, btnRoll and lblRolled
+		// TODO
+		name1 = new TextField();
+		name2 = new TextField();
+		name3 = new TextField();
+		name4 = new TextField();
+		name5 = new TextField();
+		
+		name1.setEditable(false);
+		name2.setEditable(false);
+		name3.setEditable(false);
+		name4.setEditable(false);
+		name5.setEditable(false);
+		
+		name1.setMaxWidth(100);
+		name1.setMinHeight(100);
+		
+		name2.setMaxWidth(100);
+		name2.setMinHeight(100);
+		
+		name3.setMaxWidth(100);
+		name3.setMinHeight(100);
+		
+		name4.setMaxWidth(100);
+		name4.setMinHeight(100);
+		
+		name5.setMaxWidth(100);
+		name5.setMinHeight(100);
+
+		dicePane.add(name1, 1, 1, 1, 2);
+		dicePane.add(name2, 2, 1, 1, 2);
+		dicePane.add(name3, 3, 1, 1, 2);
+		dicePane.add(name4, 4, 1, 1, 2);
+		dicePane.add(name5, 5, 1, 1, 2);
+		
+		Button btnRoll = new Button("Roll");
+		dicePane.add(btnRoll, 4, 4);
+		GridPane.setMargin(btnRoll, new Insets(10, 10, 0, 10));
+		
+		Label lblName = new Label("Rolled:");
+		dicePane.add(lblName, 5, 4 );
+		
+	    lblRolls= new Label("0");
+		dicePane.add(lblRolls, 6, 4 );
+		
+		
+		hold1 = new CheckBox();
+		hold1.setText("Hold");
+		dicePane.add(hold1, 1, 3);
+		
+		hold2 = new CheckBox();
+		hold2.setText("Hold");
+		dicePane.add(hold2, 2, 3);
+		
+		hold3 = new CheckBox();
+		hold3.setText("Hold");
+		dicePane.add(hold3, 3, 3);
+		
+	    hold4 = new CheckBox();
+		hold4.setText("Hold");
+		dicePane.add(hold4, 4, 3);
+		
+		hold5 = new CheckBox();
+		hold5.setText("Hold");
+		dicePane.add(hold5, 5, 3);
+
+		// ---------------------------------------------------------------------
+
+		GridPane scorePane = new GridPane();
+		pane.add(scorePane, 0, 1);
+		scorePane.setGridLinesVisible(false);
+		scorePane.setPadding(new Insets(10));
+		scorePane.setVgap(5);
+		scorePane.setHgap(10);
+		scorePane.setStyle("-fx-border-color: black");
+		int w = 50; // width of the text fields
+		
+		Label lblName1 = new Label("1-s:");
+		scorePane.add(lblName1, 0, 1);
+		
+		Label lblName2 = new Label("2-s:");
+		scorePane.add(lblName2, 0, 2);
+		
+		Label lblName3 = new Label("3-s:");
+		scorePane.add(lblName3, 0, 3);
+		
+		Label lblName4 = new Label("4-s:");
+		scorePane.add(lblName4, 0, 4);
+		
+		Label lblName5 = new Label("5-s:");
+		scorePane.add(lblName5, 0, 5);
+		
+		Label lblName6 = new Label("6-s:");
+		scorePane.add(lblName6, 0, 6);
+		
+		Label lblName7 = new Label("one pairs:");
+		scorePane.add(lblName7, 0, 7);
+		
+		Label lblName8 = new Label("two pairs:");
+		scorePane.add(lblName8, 0, 8);
+		
+		Label lblName9 = new Label("three pairs:");
+		scorePane.add(lblName9, 0, 9);
+		
+		Label lblName10 = new Label("four pairs:");
+		scorePane.add(lblName10, 0, 10);
+		
+		Label lblName11 = new Label("full house:");
+		scorePane.add(lblName11, 0, 11);
+		
+		Label lblName12 = new Label("small straight:");
+		scorePane.add(lblName12, 0, 12);
+		
+		Label lblName13 = new Label("large straight:");
+		scorePane.add(lblName13, 0, 13);
+		
+		Label lblName14 = new Label("chance:");
+		scorePane.add(lblName14, 0, 14);
+		
+		Label lblName15 = new Label("yatzy:");
+		scorePane.add(lblName15, 0, 15);
+		
+		for(int i = 0; i < txfResults.length; i++) {
+			txfResults[i] = new TextField();
+			txfResults[i].setMaxWidth(100);
+			txfResults[i].setEditable(false);
+			scorePane.add(txfResults[i],3, i +1);
+		}
+		
+		/*result1 = new TextField();
+		result2 = new TextField();
+		result3 = new TextField();
+		result4 = new TextField();
+		result5 = new TextField();
+		result6 = new TextField();
+		result7 = new TextField();
+		result8 = new TextField();
+		result9 = new TextField();
+		result10 = new TextField();
+		result11 = new TextField();
+		result12 = new TextField();
+		result13 = new TextField();
+		result14 = new TextField();
+		result15 = new TextField(); 
+		*/
+		
+		/*
+		result1.setMaxWidth(100);
+		result2.setMaxWidth(100);
+		result3.setMaxWidth(100);
+		result4.setMaxWidth(100);
+		result5.setMaxWidth(100);
+		result6.setMaxWidth(100);
+		result7.setMaxWidth(100);
+		result8.setMaxWidth(100);
+		result9.setMaxWidth(100);
+		result10.setMaxWidth(100);
+		result11.setMaxWidth(100);
+		result12.setMaxWidth(100);
+		result13.setMaxWidth(100);
+		result14.setMaxWidth(100);
+		result15.setMaxWidth(100);
+		
+		result1.setEditable(false);
+		result2.setEditable(false);
+		result3.setEditable(false);
+		result4.setEditable(false);
+		result5.setEditable(false);
+		result6.setEditable(false);
+		result7.setEditable(false);
+		result8.setEditable(false);
+		result9.setEditable(false);
+		result10.setEditable(false);
+		result11.setEditable(false);
+		result12.setEditable(false);
+		result13.setEditable(false);
+		result14.setEditable(false);
+		result15.setEditable(false);
+		
+		
+		scorePane.add(result1, 3, 1);
+		scorePane.add(result2, 3, 2);
+		scorePane.add(result3, 3, 3);
+		scorePane.add(result4, 3, 4);
+		scorePane.add(result5, 3, 5);
+		scorePane.add(result6, 3, 6);
+		scorePane.add(result7, 3, 7);
+		scorePane.add(result8, 3, 8);
+		scorePane.add(result9, 3, 9);
+		scorePane.add(result10, 3, 10);
+		scorePane.add(result11, 3, 11);
+		scorePane.add(result12, 3, 12);
+		scorePane.add(result13, 3, 13);
+		scorePane.add(result14, 3, 14);
+		scorePane.add(result15, 3, 15);
+		
+		*/
+		
+		sum1 = new TextField();
+		total1 = new TextField();
+		
+		sum1.setEditable(false);
+		total1.setEditable(false);
+		
+		scorePane.add(sum1, 5, 6);
+		scorePane.add(total1, 7, 6);
+		
+		
+		sum2 = new TextField();
+		total2 = new TextField();
+		
+		
+		sum2.setEditable(false);
+		total2.setEditable(false);
+		
+		scorePane.add(sum2, 5, 15);
+		scorePane.add(total2, 7, 15);
+		
+		sum1.setMaxWidth(100);
+		sum2.setMaxWidth(100);
+		total1.setMaxWidth(100);
+		total2.setMaxWidth(100);
+		
+		Label sum1 = new Label("Sum");
+		scorePane.add(sum1, 4, 6);
+		
+		Label total1 = new Label("Total");
+		scorePane.add(total1, 6, 6);
+		
+		Label sum2 = new Label("Sum");
+		scorePane.add(sum2, 4, 15);
+		
+		Label total2 = new Label("Total");
+		scorePane.add(total2, 6, 15);
+		
+
+		// Initialize labels for results, txfResults,
+		// labels and text fields for sums, bonus and total.
+		// TODO
+		btnRoll.setOnAction(event -> this.roll());
+		
+		for(int i = 0; i < txfResults.length; i++) {
+			txfResults[i].setOnMouseClicked(event -> this.chooseFieldAction(event));
+		}
+		
+	}
+
+	// -------------------------------------------------------------------------
+	
+
+	private Yatzy dice = new Yatzy();
+
+	private void roll() {
+		
+		
+	boolean[] hold = {hold1.isSelected(),hold2.isSelected(),hold3.isSelected(),hold4.isSelected(),hold5.isSelected()};
+		
+		
+	dice.throwDice(hold);
+	
+	int[] values = dice.getValues();
+	
+	int rollCount = dice.getThrowCount();
+	
+	name1.setText(String.valueOf(values[0]));
+	name2.setText(String.valueOf(values[1]));
+	name3.setText(String.valueOf(values[2]));
+	name4.setText(String.valueOf(values[3]));
+	name5.setText(String.valueOf(values[4]));
+	
+	lblRolls.setText(String.valueOf(rollCount));
+	
+	int [] results = dice.getResults();
+	
+	
+	
+	for(int i = 0; i < txfResults.length; i++) {
+		txfResults[i].setText(String.valueOf(results[i]));
+	}
+	
+
+	}
+	
+	public void chooseFieldAction(Event event) {
+		TextField txt = (TextField) event.getSource(); // så kan den samme action bruge til mange tekstfelter......}
+		
+		
+	}
+	
+	public void onePair() {
+		
+	}
+		
+		
+}
+	
+
+	// -------------------------------------------------------------------------
+
+	// Create a method for mouse click on one of the text fields in txfResults.
+	// Hint: Create small helper methods to be used in the mouse click method.
+	// TODO
+
