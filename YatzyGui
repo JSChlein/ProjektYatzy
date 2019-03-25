@@ -4,6 +4,8 @@ import javafx.application.Application;
 import javafx.event.Event;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -186,12 +188,18 @@ public class MainApp extends Application {
 	// -------------------------------------------------------------------------
 
 	private Yatzy dice = new Yatzy();
+
+	private int sumSame = 0;
+	private int bonus = 0;
+	private int sumOther = 0;
+	private int total = 0;
+	private boolean isFinished = false;
 	
 	private void checkRollCount() {
 		lblRolled.setText(String.valueOf(dice.getThrowCount()));
 		 if(dice.getThrowCount() == 2) {
 			btnRoll.setDisable(true);
-		} else {
+		} else  {
 			btnRoll.setDisable(false);
 			
 		}
@@ -209,6 +217,7 @@ public class MainApp extends Application {
 			
 			
 		dice.throwDice(hold);
+		enableHolds();
 		
 		int[] values = dice.getValues();
 		
@@ -236,43 +245,98 @@ public class MainApp extends Application {
 		}
 		
 		public void chooseFieldAction(Event event) {
-			dice.resetThrowCount();
-			checkRollCount();
-			
 			int chosenIndex =0;
-			int sumSame = 0;
-			int bonus = 0;
-			int sumOther = 0;
-			int total = 0;
-			
-			TextField txt = (TextField) event.getSource(); // så kan den samme action bruge til mange tekstfelter......}
-			for(int i = 0; i < txfResults.length;i++) {
-				if(txt.equals(txfResults[i])) {
-					chosenIndex = i;
+			if(dice.getThrowCount() == 3) {
+				dice.resetThrowCount();
+				checkRollCount();
+				
+				
+				
+				TextField txt = (TextField) event.getSource(); // så kan den samme action bruge til mange tekstfelter......}
+				for(int i = 0; i < txfResults.length;i++) {
+					if(txt.equals(txfResults[i])) {
+						chosenIndex = i;
+					}
 				}
-			}
-			
-			for(int i = 0; i < txfResults.length;i++) {
-				if(txfResults[i].isDisabled()) {
-					sumSame += Integer.valueOf(txfResults[i].getText());
+				
+				if(!txfResults[chosenIndex].isDisabled()) {
+					if(chosenIndex < 6) {
+						sumSame += Integer.valueOf(txfResults[chosenIndex].getText());
+						txfSumSame.setText(String.valueOf(sumSame));
+					} else {
+						sumOther += Integer.valueOf(txfResults[chosenIndex].getText());
+						txfSumOther.setText(String.valueOf(sumOther));
+					}
 				}
+				
+				if(sumSame >= 63) {
+					bonus = 50;
+					txfBonus.setText(String.valueOf(bonus));
+				}
+					
+				
+				txfResults[chosenIndex].setDisable(true);
+			
+				
+				dice.resetThrowCount();
+				resetHolds();
+				disableHolds();
+				
+				total = sumSame + bonus + sumOther;
+				txfTotal.setText(String.valueOf(total));
+				
+				if (!isFinished) {
+					int i = 0;
+					boolean fieldDisabled = false;
+					while(!fieldDisabled && i < txfResults.length) {
+						if(!txfResults[i].isDisabled()) {
+							fieldDisabled = true;
+						}
+						i++;
+					}
+					if(fieldDisabled == false) {
+						isFinished = true;
+					}
+				}
+				
+					if(isFinished) {
+						Alert alert = new Alert(AlertType.INFORMATION);
+						alert.setTitle("Game Finished");
+						alert.setHeaderText("The game is finished");
+						alert.setContentText("Your score: " + String.valueOf(total));
+
+						alert.showAndWait();
+					}
+				
+				
 			}
-			
-			txfResults[chosenIndex].setDisable(true);
-			sumSame += Integer.valueOf(txfResults[chosenIndex].getText());
-		
-			txfSumSame.setText(String.valueOf(sumSame));
-			dice.resetThrowCount();
-			
-			
-			total = sumSame + bonus;
-			txfTotal.setText(String.valueOf(total));
-			
-			
+	
 			
 		
 		
 		}
+		
+		private void resetHolds() {
+			
+			for(int i = 0; i < chbHolds.length;i++) {
+				chbHolds[i].setSelected(false);
+			}
+			
+		}
+		private void enableHolds() {
+			for(int i = 0; i < chbHolds.length; i++) {
+				chbHolds[i].setDisable(false);
+			}
+			
+		}
+		
+		private void disableHolds() {
+			
+			for(int i = 0; i < chbHolds.length; i++) {
+				chbHolds[i].setDisable(true);
+			}
+		}
+		
 	
 }
 
@@ -285,5 +349,4 @@ public class MainApp extends Application {
 	// Create a method for mouse click on one of the text fields in txfResults.
 	// Hint: Create small helper methods to be used in the mouse click method.
 	// TODO
-
 
