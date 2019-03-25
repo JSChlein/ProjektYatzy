@@ -175,6 +175,8 @@ public class MainApp extends Application {
 		
 		btnRoll.setOnAction(event -> this.roll());
 		
+
+			
 		for(int i = 0; i < txfResults.length; i++) {
 			txfResults[i].setOnMouseClicked(event -> this.chooseFieldAction(event));
 		}
@@ -186,10 +188,11 @@ public class MainApp extends Application {
 	private Yatzy dice = new Yatzy();
 	
 	private void checkRollCount() {
-		if(dice.getThrowCount() == 3) {
-			
-		} else if(dice.getThrowCount() == 2) {
+		lblRolled.setText(String.valueOf(dice.getThrowCount()));
+		 if(dice.getThrowCount() == 2) {
 			btnRoll.setDisable(true);
+		} else {
+			btnRoll.setDisable(false);
 			
 		}
 		
@@ -224,7 +227,9 @@ public class MainApp extends Application {
 		
 		
 		for(int i = 0; i < txfResults.length; i++) {
-			txfResults[i].setText(String.valueOf(results[i]));
+			if(!txfResults[i].isDisabled()) {
+				txfResults[i].setText(String.valueOf(results[i]));
+			}
 		}
 		
 
@@ -232,14 +237,43 @@ public class MainApp extends Application {
 		
 		public void chooseFieldAction(Event event) {
 			dice.resetThrowCount();
+			checkRollCount();
+			
+			int chosenIndex =0;
+			int sumSame = 0;
+			int bonus = 0;
+			int sumOther = 0;
+			int total = 0;
+			
 			TextField txt = (TextField) event.getSource(); // så kan den samme action bruge til mange tekstfelter......}
+			for(int i = 0; i < txfResults.length;i++) {
+				if(txt.equals(txfResults[i])) {
+					chosenIndex = i;
+				}
+			}
 			
-		}
+			for(int i = 0; i < txfResults.length;i++) {
+				if(txfResults[i].isDisabled()) {
+					sumSame += Integer.valueOf(txfResults[i].getText());
+				}
+			}
+			
+			txfResults[chosenIndex].setDisable(true);
+			sumSame += Integer.valueOf(txfResults[chosenIndex].getText());
 		
-		public void onePair() {
+			txfSumSame.setText(String.valueOf(sumSame));
+			dice.resetThrowCount();
 			
 			
+			total = sumSame + bonus;
+			txfTotal.setText(String.valueOf(total));
+			
+			
+			
+		
+		
 		}
+	
 }
 
 	// Create a method for btnRoll's action.
@@ -251,4 +285,5 @@ public class MainApp extends Application {
 	// Create a method for mouse click on one of the text fields in txfResults.
 	// Hint: Create small helper methods to be used in the mouse click method.
 	// TODO
+
 
