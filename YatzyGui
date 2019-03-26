@@ -123,8 +123,8 @@ public class MainApp extends Application {
 		}
 		
 		String[] resultType = {"1-s:","2-s:","3-s:","4-s:",
-				"5-s:","6-s:","one pairs:","two pairs:","three pairs:",
-				"four pairs:","full house:","small straight:","large straight:",
+				"5-s:","6-s:","one pairs:","two pairs:","three of a kind:",
+				"four of a kind:","full house:","small straight:","large straight:",
 				"chance:","yatzy:"};
 		
 		
@@ -349,4 +349,3 @@ public class MainApp extends Application {
 	// Create a method for mouse click on one of the text fields in txfResults.
 	// Hint: Create small helper methods to be used in the mouse click method.
 	// TODO
-
